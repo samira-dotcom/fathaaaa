@@ -1,63 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Be My Valentine 💖</title>
+<meta charset="UTF-8">
+<title>Be My Valentine 💘</title>
 
 <style>
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, pink, hotpink);
+  font-family: 'Comic Sans MS', cursive;
+  background: radial-gradient(circle, #ff9aa2, #ffb7c5);
   height: 100vh;
-  margin: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0;
 }
 
 .card {
   background: white;
-  padding: 35px;
-  border-radius: 20px;
+  padding: 40px;
+  border-radius: 25px;
   text-align: center;
-  width: 360px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+  z-index: 2;
+  width: 420px;
 }
 
 h1 {
-  color: #ff2f6d;
+  color: #ff3b6f;
 }
 
 .buttons {
   margin-top: 25px;
+  position: relative;
+  height: 120px;
 }
 
 button {
-  font-size: 18px;
-  padding: 14px 22px;
   border: none;
-  border-radius: 12px;
+  padding: 15px 25px;
+  font-size: 18px;
+  border-radius: 15px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: 0.25s ease;
+  position: absolute;
 }
 
 #yesBtn {
-  background: #ff2f6d;
+  background: #ff3b6f;
   color: white;
+  left: 30%;
 }
 
 #noBtn {
   background: #ddd;
-  margin-left: 15px;
+  right: 30%;
+}
+
+.heart {
+  position: absolute;
+  color: pink;
+  font-size: 22px;
+  animation: float 6s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(100vh) scale(1);
+  }
+  to {
+    transform: translateY(-10vh) scale(1.8);
+  }
 }
 </style>
 </head>
 
 <body>
 
+<audio id="music" autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c56fa77e4.mp3?filename=romantic-piano-112191.mp3">
+</audio>
+
 <div class="card">
-  <h1 id="question">Fatha… will you be my Valentine? 💘</h1>
+  <h1 id="question">Fatha… will you be my Valentine? 💘🥺</h1>
 
   <div class="buttons">
     <button id="yesBtn">YES 💖</button>
-    <button id="noBtn">No
+    <button id="noBtn">No 😒</button>
+  </div>
+</div>
+
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const question = document.getElementById("question");
+
+let yesSize = 18;
+let noClicks = 0;
+
+// Floating hearts
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "💖";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = 4 + Math.random() * 5 + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 8000);
+}, 600);
+
+// NO button dodge + YES grows
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("click", moveNo);
+
+function moveNo() {
+  noClicks++;
+
+  const x = Math.random() * 250;
+  const y = Math.random() * 80;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  yesSize += 10;
+  yesBtn.style.fontSize = yesSize + "px";
+  yesBtn.style.padding = 15 + yesSize/2 + "px";
+
+  const messages = [
+    "Are you sure baby? 🥺💞",
+    "Think carefully… 😭💖",
+    "Don’t play with my heart 😔",
+    "PLEASEEEEEE 😩💕",
+    "That button is broken btw 👀",
+    "You KNOW you want to 😌💘"
+  ];
+
+  question.innerText = messages[Math.min(noClicks - 1, messages.length - 1)];
+}
+
+// YES clicked
+yesBtn.addEventListener("click", () => {
+  launchConfetti();
+  question.innerHTML =
+    "<span style='font-size:26px;color:#ff3b6f;'>YAYYYYY 😭💘<br>Screenshot this and send it to me 😌📸💕</span>";
+  document.querySelector(".buttons").remove();
+});
+
+// Confetti
+function launchConfetti() {
+  for (let i = 0; i < 150; i++) {
+    const conf = document.createElement("div");
+    conf.textContent = "🎉";
+    conf.style.position = "absolute";
+    conf.style.left = Math.random() * 100 + "vw";
+    conf.style.top = "-10px";
+    conf.style.fontSize = "24px";
+    conf.style.animation = "fall 3s linear forwards";
+    document.body.appendChild(conf);
+
+    setTimeout(() => conf.remove(), 3000);
+  }
+}
+
+// Confetti animation
+const style = document.createElement("style");
+style.innerHTML = `
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}`;
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
